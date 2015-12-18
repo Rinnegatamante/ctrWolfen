@@ -1,4 +1,5 @@
 #include "include/wl_def.h"
+#include <3ds.h>
 u32 pad;
 
 /*
@@ -1083,6 +1084,9 @@ void DemoLoop()
 	printf("\nStarting Music...\n");
 	StartCPMusic(INTROSONG);
 
+	printf("Skipping demo...\n");
+	NoWait = true;
+	
 	if (!NoWait)
 		PG13();
 
@@ -1108,7 +1112,7 @@ void DemoLoop()
 	#endif
 	}
 
-	while (1)
+	while (aptMainLoop())
 	{
 		while (!NoWait)
 		{
