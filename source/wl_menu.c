@@ -2342,10 +2342,10 @@ void CP_Quit()
 	if (Confirm(endStrings[(US_RndT()&0x7)+(US_RndT()&1)]))
 	{
 		VW_UpdateScreen();
-		SD_MusicOff();
-		SD_StopSound();
+		//SD_MusicOff();
+		//SD_StopSound();
 		MenuFadeOut();
-		exit(1);
+		Quit(NULL);
 	}
 
 	DrawMainMenu();
