@@ -7,20 +7,7 @@
 #include "foreign.h"
 
 #include <3ds.h>
-/*
-#define PSP_PAD_CROSS         (2)
-#define PSP_PAD_CIRCLE        (1)
-#define PSP_PAD_SQUARE        (3)
-#define PSP_PAD_TRIANGLE      (0)
-#define PSP_PAD_L             (4)
-#define PSP_PAD_R             (5)
-#define PSP_PAD_UP            (8)
-#define PSP_PAD_DOWN          (6)
-#define PSP_PAD_LEFT          (7)
-#define PSP_PAD_RIGHT         (9)
-#define PSP_PAD_START         (11)
-#define PSP_PAD_SELECT        (10)
-*/
+
 extern int vwidth, vheight, vstride; /* size of screen */
 
 /*
