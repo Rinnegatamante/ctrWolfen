@@ -10,33 +10,22 @@
 #define O_BINARY 0
 #endif
 
-/* TimeCount from David Haslam -- dch@sirius.demon.co.uk */
-typedef struct time{
-	u64 tv_sec;
-	u64 tv_usec;
-};
-
-static struct time t0;
+static struct timeval t0;
 static long tc0;
-
-void getTime(struct time* t){
-	t->tv_usec = osGetTime();
-	t->tv_sec = osGetTime() / 1000;
-}
 
 void set_TimeCount(unsigned long t)
 {
 	tc0 = t;
-	getTime(&t0);
+	gettimeofday(&t0, NULL);
 }
 
 unsigned long get_TimeCount()
 {
-	struct time t1;
+	struct timeval t1;
 	long secs, usecs;
 	long tc;
 	
-	getTime(&t1);
+	gettimeofday(&t1, NULL);
 	secs = t1.tv_sec - t0.tv_sec;
 	usecs = t1.tv_usec - t0.tv_usec;
 	if (usecs < 0) {

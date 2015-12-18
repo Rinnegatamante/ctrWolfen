@@ -16,7 +16,10 @@ vstride = 400;
 
 int main (int argc, char *argv[])
 {
-	osSetSpeedupEnable(true);
+	aptInit();
+	aptOpenSession();
+	Result ret=APT_SetAppCpuTimeLimit(30);
+	aptCloseSession();
 	fsInit();
 	gfxInit(GSP_RGB565_OES,GSP_RGB565_OES,false);
 	hidInit();
@@ -158,21 +161,6 @@ void VL_GetPalette(byte *palette)
 =
 =================
 */
-
-void ToggleSpeed()
-{
-	static int speed = 1;
-	int freq[] = { 268, 804 };
-	char temp[8];
-	
-	osSetSpeedupEnable(true);
-
-	sprintf(temp, "%d MHz", freq[speed]);
-	Message (temp);
-
-	speed = (speed + 1) % 2;
-}
-
 static int mx = 0;
 static int my = 0;
 
@@ -345,7 +333,6 @@ void INL_Update()
 		{
 			// START just pressed
 			if (buttons & KEY_A)
-			ToggleSpeed();
 			else
 			keyboard_handler(sc_Escape, 1); // MENU pressed
 		}
