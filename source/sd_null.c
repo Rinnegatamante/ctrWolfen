@@ -6,8 +6,18 @@ SDMode SoundMode;
 SMMode MusicMode;
 SDSMode DigiMode;
 
+static int volume;
 static boolean SD_Started;
 
+void SD_SetVolume(int vol)
+{
+	volume = vol;
+}
+
+int SD_GetVolume()
+{
+	return volume;
+}
 
 void SD_SetDigiDevice(SDSMode mode)
 {

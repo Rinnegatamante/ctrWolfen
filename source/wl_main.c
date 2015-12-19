@@ -185,10 +185,10 @@ WriteInt32(fd, viewsize);
 static void SetDefaults()
 {
 	viewsize = 50;
-	//SD_SetSoundMode(sdm_AdLib);
-	//SD_SetDigiDevice(sds_SoundBlaster);
-	//SD_SetMusicMode(smm_AdLib);
-	//SD_SetVolume(10);
+	SD_SetSoundMode(sdm_AdLib);
+	SD_SetDigiDevice(sds_SoundBlaster);
+	SD_SetMusicMode(smm_AdLib);
+	SD_SetVolume(10);
 }
 
 int ReadConfig()
@@ -245,7 +245,7 @@ int ReadConfig()
 			SD_SetSoundMode(ReadInt32(fd)); /* padding */
 			SD_SetMusicMode(ReadInt32(fd)); /* padding */
 			SD_SetDigiDevice(ReadInt32(fd)); /* padding */
-			//SD_SetVolume(ReadInt32(fd)); /* padding */
+			SD_SetVolume(ReadInt32(fd)); /* padding */
 			ReadInt32(fd); /* padding */
 			ReadInt32(fd); /* padding */
 			ReadInt32(fd); /* padding */
