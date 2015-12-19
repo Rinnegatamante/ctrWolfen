@@ -781,16 +781,20 @@ static void PML_OpenPageFile()
 	strcpy(fname, pfilename);
 	strcat(fname, extension);
 
-printf("Opening page file %s\n",fname);
+	printf("Opening page file %s...",fname);
 	PageFile = OpenRead(fname);
 	if (PageFile == -1)
 		Quit("PML_OpenPageFile: Unable to open page file");
-
+	printf("Done!\n",fname);
+	
 	/* Read in header variables */
 	ChunksInFile = ReadInt16(PageFile);
 	PMSpriteStart = ReadInt16(PageFile);
 	PMSoundStart = ReadInt16(PageFile);
-
+	printf("Chunks detected: %i\n",ChunksInFile);
+	printf("Sprites offset: 0x%X\n",PMSpriteStart);
+	printf("Sounds offset: 0x%X\n",PMSoundStart);
+	
 	/* Allocate and clear the page list */
 	MM_GetPtr((memptr)&PMPages, sizeof(PageListStruct) * ChunksInFile);
 	MM_SetLock((memptr)&PMPages, true);
@@ -823,9 +827,10 @@ memptr PM_GetPage(int pagenum)
 {
 	PageListStruct *page;
 
-	if (pagenum >= ChunksInFile)
+	if (pagenum >= ChunksInFile){
+		printf("Error detected on chunk %i!\n", pagenum);
 		Quit("PM_GetPage: Invalid page request");
-
+	}
 	page = &PMPages[pagenum];
 	if (page->addr == NULL) {
 		MM_GetPtr((memptr)&page->addr, PMPageSize);
