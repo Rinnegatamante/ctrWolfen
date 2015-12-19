@@ -137,9 +137,9 @@ void VL_SetPalette(const byte *palette)
 	u16 *table = d_8to16table;
 	unsigned r, g, b;
 	for(i=0; i<256; i++){
-		r = pal[0];
-		g = pal[1];
-		b = pal[2];
+		r = pal[0] << 2;
+		g = pal[1] << 2;
+		b = pal[2] << 2;
 		table[0] = RGB8_to_565(r,g,b);
 		table++;
 		pal += 3;
