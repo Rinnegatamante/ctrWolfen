@@ -8,7 +8,7 @@ endif
 
 TOPDIR ?= $(CURDIR)
 include $(DEVKITARM)/3ds_rules
-LPP_CTRULIB ?= $(CURDIR)/libctru
+CSTM_CTRULIB ?= $(CURDIR)/libctru
 #---------------------------------------------------------------------------------
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed
@@ -42,10 +42,10 @@ INCLUDES	:=	include
 ARCH	:=	-march=armv6k -mtune=mpcore -mfloat-abi=softfp
 
 CFLAGS	:=	-g -O2 -mword-relocations \
-			-fomit-frame-pointer -ffast-math \
+			-fomit-frame-pointer \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DSKIPFADE -DHAVE_FFBLK -DDOSISM -fno-short-enums
+CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS -DSKIPFADE -DHAVE_FFBLK -DDOSISM
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 
@@ -58,7 +58,7 @@ LIBS	:= -lctru -lm -lc
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:= $(CTRULIB) $(LPP_CTRULIB)
+LIBDIRS	:= $(CSTM_CTRULIB)
 
 
 #---------------------------------------------------------------------------------
@@ -77,7 +77,6 @@ export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
 COMMON_OBJS = ff_ctr.o \
-			fmopl.o \
 			id_ca.o \
 			id_us.o \
 			id_vh.o \
@@ -85,7 +84,7 @@ COMMON_OBJS = ff_ctr.o \
 			objs.o \
 			sd_null.o \
 			vi_comm.o \
-			vi_ctr.o \
+			sys_ctr.o \
 			wl_act1.o \
 			wl_act2.o \
 			wl_act3.o \
