@@ -168,8 +168,40 @@ void VL_GetPalette(byte *palette)
 */
 static int mx = 0;
 static int my = 0;
-
+static int weapon;
 void INL_SetKeys(u32 keys, u32 state){
+	if( keys & KEY_SELECT){ // Swap Weapons
+		if (state == 1){
+			weapon = gamestate.weapon;
+			if (gamestate.weapon == 0){
+				keyboard_handler(sc_1, 0);
+				keyboard_handler(sc_2, 1);
+				keyboard_handler(sc_3, 0); 
+				keyboard_handler(sc_4, 0);
+			}else if (gamestate.weapon == 1){
+				keyboard_handler(sc_1, 0);
+				keyboard_handler(sc_2, 0);
+				keyboard_handler(sc_3, 1); 
+				keyboard_handler(sc_4, 0);
+			}else if (gamestate.weapon == 2){
+				keyboard_handler(sc_1, 0);
+				keyboard_handler(sc_2, 0);
+				keyboard_handler(sc_3, 0); 
+				keyboard_handler(sc_4, 1);
+			}else{
+				keyboard_handler(sc_1, 1);
+				keyboard_handler(sc_2, 0);
+				keyboard_handler(sc_3, 0); 
+				keyboard_handler(sc_4, 0);
+			}
+		}else{
+			if (gamestate.weapon == weapon) keyboard_handler(sc_1, 1); 
+			else keyboard_handler(sc_1, 0); 
+			keyboard_handler(sc_2, 0);
+			keyboard_handler(sc_3, 0); 
+			keyboard_handler(sc_4, 0);
+		}
+	}
 	if( keys & KEY_A){ // Yes button/Fire
 		keyboard_handler(sc_Y, state); 
 		keyboard_handler(sc_Control, state);
@@ -180,8 +212,9 @@ void INL_SetKeys(u32 keys, u32 state){
 	if( keys & KEY_Y){ // Open/Operate
 		keyboard_handler(sc_Space, state);
 	}
-	if( keys & KEY_B){ // Backspace
+	if( keys & KEY_B){ // Back
 		keyboard_handler(sc_BackSpace, state);
+		keyboard_handler(sc_N, state);
 	}
 	if( keys & KEY_START){ // Open menu
 		keyboard_handler(sc_Escape, state);
