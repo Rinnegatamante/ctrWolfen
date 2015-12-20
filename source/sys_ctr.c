@@ -170,7 +170,8 @@ static int mx = 0;
 static int my = 0;
 static int weapon;
 void INL_SetKeys(u32 keys, u32 state){
-	if( keys & KEY_SELECT){ // Swap Weapons
+	if( keys & KEY_SELECT){ // Swap Weapons / Confirm Savegames
+		keyboard_handler(sc_Enter, state);
 		if (state == 1){
 			weapon = gamestate.weapon;
 			if (gamestate.weapon == 0){
