@@ -685,7 +685,7 @@ void StartDemoRecord(int levelnumber)
 ==================
 */
 
-char demoname[13] = "demo?.dem";
+signed char demoname[13] = "demo?.dem";
 
 void FinishDemoRecord()
 {
@@ -841,7 +841,7 @@ void PlayDemo(int demonumber)
 	ClearMemory();
 }
 
-int PlayDemoFromFile(char *demoname)
+int PlayDemoFromFile(signed char *demoname)
 {
 	int length;
 

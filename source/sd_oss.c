@@ -27,7 +27,7 @@ typedef	struct {
 } PACKED PCSound;
 
 typedef	struct {
-	byte mChar, cChar, mScale, cScale, mAttack, cAttack, mSus, cSus,
+	byte msigned char, csigned char, mScale, cScale, mAttack, cAttack, mSus, cSus,
 		mWave, cWave, nConn, voice, mode, unused[3];
 } PACKED Instrument;
 
@@ -119,19 +119,19 @@ static void *SoundThread(void *data)
 				AdlibPlaying = NewAdlib;
 				AdlibSnd = (AdLibSound *)audiosegs[STARTADLIBSOUNDS+AdlibPlaying];
 				inst = (Instrument *)&AdlibSnd->inst;
-#define alChar		0x20
+#define alsigned char		0x20
 #define alScale		0x40
 #define alAttack	0x60
 #define alSus		0x80
 #define alFeedCon	0xC0
 #define alWave		0xE0
 
-				OPLWrite(OPL, 0 + alChar, 0);
+				OPLWrite(OPL, 0 + alsigned char, 0);
 				OPLWrite(OPL, 0 + alScale, 0);
 				OPLWrite(OPL, 0 + alAttack, 0);
 				OPLWrite(OPL, 0 + alSus, 0);
 				OPLWrite(OPL, 0 + alWave, 0);
-				OPLWrite(OPL, 3 + alChar, 0);
+				OPLWrite(OPL, 3 + alsigned char, 0);
 				OPLWrite(OPL, 3 + alScale, 0);
 				OPLWrite(OPL, 3 + alAttack, 0);
 				OPLWrite(OPL, 3 + alSus, 0);
@@ -139,12 +139,12 @@ static void *SoundThread(void *data)
 				OPLWrite(OPL, 0xA0, 0);
 				OPLWrite(OPL, 0xB0, 0);
 				
-				OPLWrite(OPL, 0 + alChar, inst->mChar);
+				OPLWrite(OPL, 0 + alsigned char, inst->msigned char);
 				OPLWrite(OPL, 0 + alScale, inst->mScale);
 				OPLWrite(OPL, 0 + alAttack, inst->mAttack);
 				OPLWrite(OPL, 0 + alSus, inst->mSus);
 				OPLWrite(OPL, 0 + alWave, inst->mWave);
-				OPLWrite(OPL, 3 + alChar, inst->cChar);
+				OPLWrite(OPL, 3 + alsigned char, inst->csigned char);
 				OPLWrite(OPL, 3 + alScale, inst->cScale);
 				OPLWrite(OPL, 3 + alAttack, inst->cAttack);
 				OPLWrite(OPL, 3 + alSus, inst->cSus);

@@ -7,7 +7,7 @@
 #define	MaxHighName	57
 #define	MaxScores	7
 typedef	struct {
-	char name[MaxHighName + 1];
+	signed char name[MaxHighName + 1];
 	int score;
 	int completed, episode;
 } HighScore;
@@ -30,15 +30,15 @@ void US_Startup(),
 				US_InitRndT(boolean randomize),
 				US_DrawWindow(word x,word y,word w,word h),
 				US_ClearWindow(void),
-				US_PrintCentered(char *s),
-				US_CPrint(char *s),
-				US_CPrintLine(char *s),
-				US_Print(char *s),
+				US_PrintCentered(signed char *s),
+				US_CPrint(signed char *s),
+				US_CPrintLine(signed char *s),
+				US_Print(signed char *s),
 				US_PrintUnsigned(longword n);
-boolean	US_LineInput(int x,int y,char *buf,char *def,boolean escok,
+boolean	US_LineInput(int x,int y,signed char *buf,signed char *def,boolean escok,
 				int maxchars,int maxwidth);
 int				US_RndT();
 
-void	USL_PrintInCenter(char *s,Rect r);
+void	USL_PrintInCenter(signed char *s,Rect r);
 
 #endif

@@ -682,7 +682,7 @@ typedef	enum {
 =============================================================================
 */
 
-extern	char str[80], str2[20];
+extern	signed char str[80], str2[20];
 
 extern int viewwidth, viewheight;
 extern int viewwidthwin, viewheightwin;
@@ -699,7 +699,7 @@ extern int pixelangle[MAXVIEWWIDTH];
 extern long finetangent[FINEANGLES/4];
 extern fixed sintable[], *costable;
 
-extern char configname[13];
+extern signed char configname[13];
 
 extern automap_t Auto_Map;
 
@@ -710,14 +710,14 @@ void NewGame(int difficulty,int episode);
 void NewViewSize(int width);
 void ShowViewSize(int width);
 
-int LoadTheGame(char *fn, int x, int y);
-int SaveTheGame(char *fn, char *tag, int x, int y);
-int ReadSaveTag(char *fn, char *tag);
+int LoadTheGame(signed char *fn, int x, int y);
+int SaveTheGame(signed char *fn, signed char *tag, int x, int y);
+int ReadSaveTag(signed char *fn, signed char *tag);
 
 void ShutdownId();
 //int WriteConfig();
 
-int WolfMain(int argc, char *argv[]);
+int WolfMain(int argc, signed char *argv[]);
 
 /*
 =============================================================================
@@ -732,7 +732,7 @@ extern	boolean		ingame;
 extern	gametype	gamestate;
 extern	int		doornum;
 
-extern	char		demoname[13];
+extern	signed char		demoname[13];
 
 extern	long		spearx,speary;
 extern	unsigned	spearangle;
@@ -745,7 +745,7 @@ void 	DrawPlayScreen (void);
 void 	GameLoop (void);
 void ClearMemory (void);
 void PlayDemo(int demonumber);
-int PlayDemoFromFile(char *demoname);
+int PlayDemoFromFile(signed char *demoname);
 void RecordDemo();
 void DrawHighScores();
 void DrawPlayBorder();

@@ -13,7 +13,7 @@ vwidth = 400;
 vheight = 240;
 vstride = 400;
 
-int main (int argc, char *argv[])
+int main (int argc, signed char *argv[])
 {
 	aptInit();
 	aptOpenSession();
@@ -47,7 +47,7 @@ void exitGame(){
 	exit(EXIT_FAILURE);
 }
 
-void Quit(char *error)
+void Quit(signed char *error)
 {
 	memptr screen = NULL;
 
@@ -170,43 +170,18 @@ static int mx = 0;
 static int my = 0;
 
 void INL_SetKeys(u32 keys, u32 state){
-	if ((keys & KEY_SELECT) && (state == 0)){
-		keyboard_handler(sc_1, 0); 
-		keyboard_handler(sc_2, 0); 
-		keyboard_handler(sc_3, 0); 
-		keyboard_handler(sc_4, 0); 
-	}else if((keys & KEY_SELECT) && (state == 1)){
-		keyboard_handler(sc_Y, 0); 
-		keyboard_handler(sc_Control, 0); 
-		keyboard_handler(sc_RShift, 0); 
-		keyboard_handler(sc_Space, 0); 
-		keyboard_handler(sc_BackSpace, 0);
-		if( keys & KEY_A){ // Weapon 1
-			keyboard_handler(sc_1, state); 
-		}
-		if( keys & KEY_X){ // Weapon 2
-			keyboard_handler(sc_2, state);
-		}
-		if( keys & KEY_Y){ // Weapon 3
-			keyboard_handler(sc_3, state);
-		}
-		if( keys & KEY_B){ // Weapon 4
-			keyboard_handler(sc_4, state);
-		}
-	}else{
-		if( keys & KEY_A){ // Yes button/Fire
-			keyboard_handler(sc_Y, state); 
-			keyboard_handler(sc_Control, state);
-		}
-		if( keys & KEY_X){ // Run
-			keyboard_handler(sc_RShift, state);
-		}
-		if( keys & KEY_Y){ // Open/Operate
-			keyboard_handler(sc_Space, state);
-		}
-		if( keys & KEY_B){ // Backspace
-			keyboard_handler(sc_BackSpace, state);
-		}
+	if( keys & KEY_A){ // Yes button/Fire
+		keyboard_handler(sc_Y, state); 
+		keyboard_handler(sc_Control, state);
+	}
+	if( keys & KEY_X){ // Run
+		keyboard_handler(sc_RShift, state);
+	}
+	if( keys & KEY_Y){ // Open/Operate
+		keyboard_handler(sc_Space, state);
+	}
+	if( keys & KEY_B){ // Backspace
+		keyboard_handler(sc_BackSpace, state);
 	}
 	if( keys & KEY_START){ // Open menu
 		keyboard_handler(sc_Escape, state);
@@ -252,6 +227,9 @@ void INL_Update()
 		INL_SetKeys(kDown, 1);
 	if(kUp)
 		INL_SetKeys(kUp, 0);
+		
+	mx = 0;
+	my = 0;
 	
 }
 

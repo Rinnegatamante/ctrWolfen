@@ -11,7 +11,7 @@ typedef	struct
 	int planestart[3];
 	int planelength[3];
 	int width, height;
-	char name[16];
+	signed char name[16];
 } maptype;
 
 /* ======================================================================== */
@@ -23,12 +23,12 @@ extern	maptype	*mapheaderseg[NUMMAPS];
 extern	byte	*audiosegs[NUMSNDCHUNKS];
 extern	byte	*grsegs[NUMCHUNKS];
 
-extern char extension[5];
+extern signed char extension[5];
 
 /* ======================================================================== */
 
-boolean CA_LoadFile(char *filename, memptr *ptr);
-boolean CA_WriteFile(char *filename, void *ptr, long length);
+boolean CA_LoadFile(signed char *filename, memptr *ptr);
+boolean CA_WriteFile(signed char *filename, void *ptr, long length);
 
 void CA_RLEWexpand(word *source, word *dest, long length, word rlewtag);
 

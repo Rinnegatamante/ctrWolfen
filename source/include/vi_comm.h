@@ -145,7 +145,7 @@ typedef	struct {
 extern boolean Keyboard[], MousePresent, JoysPresent[];
 
 extern	boolean		Paused;
-extern	char		LastASCII;
+extern	signed char		LastASCII;
 extern	ScanCode	LastScan;
 extern	KeyboardDef	KbdDefs;
 extern	ControlType	Controls[MaxPlayers];
@@ -161,7 +161,7 @@ extern void IN_Startup(), IN_Shutdown(), IN_ClearKeysDown(),
 		IN_Ack();
 		
 extern boolean IN_UserInput(longword delay);
-extern char *IN_GetScanName(ScanCode);
+extern signed char *IN_GetScanName(ScanCode);
 
 byte IN_MouseButtons();
 byte IN_JoyButtons();

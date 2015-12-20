@@ -104,7 +104,7 @@ static void draw_obj(int x, int y, int a, int c)
 
 void AutoMap(void)
 {
-    char *level = &mapheaderseg[mapon]->name[0];
+    signed char *level = &mapheaderseg[mapon]->name[0];
     int cx = 0;
     int cy = 0;
 

@@ -46,9 +46,9 @@ extern boolean screenfaded;
 #define VW_WaitVBL		VL_WaitVBL
 #define VW_FadeIn()		VL_FadeIn(0,255,gamepal,30);
 #define VW_FadeOut()		VL_FadeOut(0,255,0,0,0,30);
-void	VW_MeasurePropString(char *string, word *width, word *height);
+void	VW_MeasurePropString(signed char *string, word *width, word *height);
 
-void VW_DrawPropString(char *string);
+void VW_DrawPropString(signed char *string);
 
 void VL_FadeOut(int start, int end, int red, int green, int blue, int steps);
 void VL_FadeIn(int start, int end, const byte *palette, int steps);

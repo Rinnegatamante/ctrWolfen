@@ -98,7 +98,7 @@ typedef void (* MenuFunc)(int temp1);
 
 typedef struct {
 	int active;
-	char string[36];
+	signed char string[36];
 	MenuFunc routine;
 } CP_itemtype;
 
@@ -126,8 +126,8 @@ void TicDelay(int count);
 void CacheLump(int lumpstart,int lumpend);
 void UnCacheLump(int lumpstart,int lumpend);
 void StartCPMusic(int song);
-int  Confirm(char *string);
-void Message(char *string);
+int  Confirm(signed char *string);
+void Message(signed char *string);
 void CheckPause(void);
 void ShootSnd(void);
 void FreeMusic(void);
@@ -190,7 +190,7 @@ void CheckForEpisodes(void);
 // VARIABLES
 //
 extern int SaveGamesAvail[10],StartGame,SoundStatus;
-extern char SaveGameNames[10][32],SaveName[13];
+extern signed char SaveGameNames[10][32],SaveName[13];
 
 enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};	// FOR INPUT TYPES
 
@@ -220,7 +220,7 @@ typedef struct {
 
 extern LRstruct LevelRatios[];
 
-void Write(int x,int y,char *string);
+void Write(int x,int y,signed char *string);
 int GetYorN(int x,int y,int pic);
 
 #endif

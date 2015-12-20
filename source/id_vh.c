@@ -196,7 +196,7 @@ height is a word
 256 byte widths
 data
 */
-void VW_DrawPropString(char *string)
+void VW_DrawPropString(signed char *string)
 {
 	byte *font;
 	int width, step, height, x, xs, y;
@@ -224,7 +224,7 @@ void VW_DrawPropString(char *string)
 	}
 }
 
-void VW_MeasurePropString(char *string, word *width, word *height)
+void VW_MeasurePropString(signed char *string, word *width, word *height)
 {
 	int w, mw;
 	byte *font = grsegs[STARTFONT+fontnumber];

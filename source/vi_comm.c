@@ -18,7 +18,7 @@ boolean		JoysPresent[MaxJoys];
 boolean		Keyboard[NumCodes];
 boolean		InternalKeyboard[NumCodes];
 boolean		Paused;
-char		LastASCII;
+signed char		LastASCII;
 ScanCode	LastScan;
 
 KeyboardDef KbdDefs = {sc_Control, sc_Alt, sc_Home, sc_UpArrow, sc_PgUp, sc_LeftArrow, sc_RightArrow, sc_End, sc_DownArrow, sc_PgDn};

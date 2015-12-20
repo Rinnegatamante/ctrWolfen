@@ -49,7 +49,7 @@ TEXT FORMATTING COMMANDS
 int		pagenum, numpages;
 
 unsigned	leftmargin[TEXTROWS], rightmargin[TEXTROWS];
-char		*text;
+signed char		*text;
 unsigned	rowon;
 
 int		picx, picy, picnum, picdelay;
@@ -82,8 +82,8 @@ void RipToEOL()
 
 int ParseNumber()
 {
-	char ch;
-	char num[80], *numptr;
+	signed char ch;
+	signed char num[80], *numptr;
 
 //
 // scan until a number is found
@@ -284,7 +284,7 @@ void HandleCommand()
 
 void NewLine()
 {
-	char	ch;
+	signed char	ch;
 
 	if (++rowon == TEXTROWS)
 	{
@@ -324,9 +324,9 @@ void NewLine()
 
 void HandleCtrls()
 {
-	char	ch;
+	signed char	ch;
 
-	ch = *text++;			// get the character and advance
+	ch = *text++;			// get the signed character and advance
 
 	if (ch == '\n')
 	{
@@ -347,7 +347,7 @@ void HandleCtrls()
 
 void HandleWord()
 {
-	char words[WORDLIMIT];
+	signed char words[WORDLIMIT];
 	int wordindex;
 	word wwidth, wheight, newpos;
 
@@ -405,7 +405,7 @@ void HandleWord()
 void PageLayout(boolean shownumber)
 {
 	int		i,oldfontcolor;
-	char	ch;
+	signed char	ch;
 
 	oldfontcolor = fontcolor;
 
@@ -526,8 +526,8 @@ void BackPage()
 */
 void CacheLayoutGraphics()
 {
-	char	*bombpoint, *textstart;
-	char	ch;
+	signed char	*bombpoint, *textstart;
+	signed char	ch;
 
 	textstart = text;
 	bombpoint = text+30000;
@@ -577,7 +577,7 @@ void CacheLayoutGraphics()
 =====================
 */
 
-void ShowArticle(char *article)
+void ShowArticle(signed char *article)
 {
 	unsigned oldfontnumber;
 	boolean newpage, firstpage;
@@ -659,11 +659,11 @@ void ShowArticle(char *article)
 void HelpScreens()
 {
 	int artnum;
-	char *text;
+	signed char *text;
 
 	artnum = helpextern;
 	CA_CacheGrChunk(artnum);
-	text = (char *)grsegs[artnum];
+	text = (signed char *)grsegs[artnum];
 
 	ShowArticle(text);
 
@@ -680,13 +680,13 @@ void HelpScreens()
 void EndText()
 {
 	int artnum;
-	char *text;
+	signed char *text;
 
 	ClearMemory();
 
 	artnum = endextern+gamestate.episode;
 	CA_CacheGrChunk(artnum);
-	text = (char *)grsegs[artnum];
+	text = (signed char *)grsegs[artnum];
 
 	ShowArticle(text);
 

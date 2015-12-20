@@ -105,7 +105,7 @@ void Victory()
 #ifndef SPEARDEMO
 	long	sec;
 	int i,min,kr,sr,tr,x;
-	char tempstr[8];
+	signed char tempstr[8];
 
 #define RATIOX	6
 #define RATIOY	14
@@ -269,7 +269,7 @@ void PG13()
 
 //==========================================================================
 
-void Write(int x,int y,char *string)
+void Write(int x,int y,signed char *string)
 {
  int alpha[]={L_NUM0PIC,L_NUM1PIC,L_NUM2PIC,L_NUM3PIC,L_NUM4PIC,L_NUM5PIC,
 	L_NUM6PIC,L_NUM7PIC,L_NUM8PIC,L_NUM9PIC,L_COLONPIC,0,0,0,0,0,0,L_APIC,L_BPIC,
@@ -278,7 +278,7 @@ void Write(int x,int y,char *string)
 	L_UPIC,L_VPIC,L_WPIC,L_XPIC,L_YPIC,L_ZPIC};
 
  int i,ox,nx,ny;
- char ch;
+ signed char ch;
 
 
  ox=nx=x*8;
@@ -373,12 +373,12 @@ void LevelCompleted()
 	#define PERCENT100AMT	10000
 	typedef struct {
 			float time;
-			char timestr[6];
+			signed char timestr[6];
 			} times;
 
 	int	x,i,min,sec,ratio,kr,sr,tr;
 
-	char tempstr[10];
+	signed char tempstr[10];
 	long bonus,timeleft=0;
 	times parTimes[]=
 	{
@@ -910,8 +910,8 @@ void PreloadGraphics()
 
 void DrawHighScores()
 {
-	char buffer[16];
-	char buffer1[16], *str;
+	signed char buffer[16];
+	signed char buffer1[16], *str;
 	word i, w, h;
 	HighScore *s;
 	

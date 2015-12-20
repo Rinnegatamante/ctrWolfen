@@ -73,8 +73,8 @@ typedef	struct {
 
 extern const byte gamepal[];
 
-int MS_CheckParm(char *string);
-void Quit(char *error);
+int MS_CheckParm(signed char *string);
+void Quit(signed char *error);
 
 #define TickBase	70	/* 70Hz per tick */
 

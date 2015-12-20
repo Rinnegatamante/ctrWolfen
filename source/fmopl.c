@@ -19,7 +19,7 @@
 
 #define INLINE static /* inline */
 
-void logerror(const char *text, ...);
+void logerror(const signed char *text, ...);
 
 #ifndef PI
 #define PI 3.14159265358979323846
@@ -962,7 +962,7 @@ void OPLResetChip(FM_OPL *OPL)
 /* ----------  Create a virtual YM3812 ----------       */
 FM_OPL *OPLCreate(int type, int clock, int rate)
 {
-	char *ptr;
+	signed char *ptr;
 	FM_OPL *OPL;
 	int state_size;
 	int max_ch = 9; /* normaly 9 channels */

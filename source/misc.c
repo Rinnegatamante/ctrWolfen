@@ -52,7 +52,7 @@ long filelength(int handle)
 
 char *strlwr(char *s)
 {
-	char *p = s;
+	signed char *p = s;
 	
 	while (*p) {
 		*p = tolower(*p);
@@ -206,7 +206,7 @@ uint32_t SwapInt32L(uint32_t i)
 
 /* ** */
 
-int OpenWrite(char *fn)
+int OpenWrite(signed char *fn)
 {
 	int fp;
 	
@@ -214,7 +214,7 @@ int OpenWrite(char *fn)
 	return fp;
 }
 
-int OpenWriteAppend(char *fn)
+int OpenWriteAppend(signed char *fn)
 {
 	int fp;
 	
@@ -262,7 +262,7 @@ int WriteBytes(int fp, byte *d, int len)
 }
 
 
-int OpenRead(char *fn)
+int OpenRead(signed char *fn)
 {
 	int fp;
 	

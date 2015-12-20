@@ -16,7 +16,7 @@ u32 pad;
 
 #define FOCALLENGTH     0x5800		/* in global coordinates */
 
-char str[80], str2[20];
+signed char str[80], str2[20];
 
 int viewwidth, viewheight;
 int viewwidthwin, viewheightwin; /* for borders */
@@ -38,12 +38,12 @@ int pixelangle[MAXVIEWWIDTH];
 long finetangent[FINEANGLES/4];
 int horizwall[MAXWALLTILES], vertwall[MAXWALLTILES];
 
-char configname[13] = "config.";
+signed char configname[13] = "config.";
 
 fixed sintable[ANGLES+ANGLES/4+1], *costable = sintable+(ANGLES/4);
 
 int _argc;
-char **_argv;
+signed char **_argv;
 
 /*
 ========================
@@ -101,7 +101,7 @@ void CalcTics()
 
 static void DiskFlopAnim(int x, int y)
 {
-	static char which = 0;
+	static signed char which = 0;
 
 	if (!x && !y)
 		return;
@@ -194,7 +194,7 @@ static void SetDefaults()
 int ReadConfig()
 {
 	int fd, configokay;
-	char buf[8];
+	signed char buf[8];
 	int32_t version, v;
 	int i;
 
@@ -323,7 +323,7 @@ long DoChecksum(byte *source, int size, long checksum)
 #define WriteWord(a) WriteInt16(fd, a)
 #define WriteLong(a) WriteInt32(fd, a)
 
-int SaveTheGame(char *fn, char *tag, int x, int y)
+int SaveTheGame(signed char *fn, signed char *tag, int x, int y)
 {
 	int fd;
 	int i;
@@ -448,9 +448,9 @@ int SaveTheGame(char *fn, char *tag, int x, int y)
 	return 0;
 }
 
-int ReadSaveTag(char *fn, char *tag)
+int ReadSaveTag(signed char *fn, signed char *tag)
 {
-	char buf[8];
+	signed char buf[8];
 	int fd;
 	int32_t v;
 
@@ -492,7 +492,7 @@ rstfail:
 #define ReadWord(a) a = ReadInt16(fd)
 #define ReadLong(a) a = ReadInt32(fd)
 
-int LoadTheGame(char *fn, int x, int y)
+int LoadTheGame(signed char *fn, int x, int y)
 {
 	int fd;
 	int i;
@@ -651,10 +651,10 @@ openfail:
 =================
 */
 
-int MS_CheckParm(char *check)
+int MS_CheckParm(signed char *check)
 {
 	int i;
-	char *parm;
+	signed char *parm;
 
 	for (i = 1; i < _argc; i++) {
 		parm = _argv[i];
@@ -1202,7 +1202,7 @@ void DemoLoop()
 ==========================
 */
 
-int WolfMain(int argc, char *argv[])
+int WolfMain(int argc, signed char *argv[])
 {
 	_argc = argc;
 	_argv = argv;

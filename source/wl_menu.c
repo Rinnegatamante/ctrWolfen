@@ -21,7 +21,7 @@ void CP_ReadThis();
 #define STARTITEM	newgame
 #endif
 
-static char endStrings[9][120]=
+static signed char endStrings[9][120]=
 {
 	ENDSTR1,
 	ENDSTR2,
@@ -162,7 +162,7 @@ static int EpisodeSelect[6] = { 1 };
 #endif
 
 int SaveGamesAvail[10],StartGame,SoundStatus=1,pickquick;
-char SaveGameNames[10][32],SaveName[13]="savegam?.";
+signed char SaveGameNames[10][32],SaveName[13]="savegam?.";
 
 
 ////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ char SaveGameNames[10][32],SaveName[13]="savegam?.";
 #if 0
 static struct {
 	int sc;
-	char *str;
+	signed char *str;
 } ScanNames[] = {
 { sc_1,		"1"	},
 { sc_2,		"2"	},
@@ -201,7 +201,7 @@ static struct {
 { sc_None,	"?"	}
 };
 
-char *IN_GetScanName(ScanCode scan)
+signed char *IN_GetScanName(ScanCode scan)
 {
 	int i;
 
@@ -213,7 +213,7 @@ char *IN_GetScanName(ScanCode scan)
 
 #else
 
-static char
+static signed char
 					*ScanNames[] =		// Scan code names with single chars
 					{
 	"?","?","1","2","3","4","5","6","7","8","9","0","-","+","?","?",
@@ -225,7 +225,7 @@ static char
 	"?","?","?","?","?","?","?","?","?","?","?","?","?","?","?","?",
 	"?","?","?","?","?","?","?","?","?","?","?","?","?","?","?","?"
 					},	// DEBUG - consolidate these
-					ExtScanCodes[] =	// Scan codes with >1 char names
+					ExtScanCodes[] =	// Scan codes with >1 signed char names
 					{
 	1,0xe,0xf,0x1d,sc_LShift,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,
 	0x3f,0x40,0x41,0x42,0x43,0x44,0x57,0x59,0x46,0x1c,sc_RShift,
@@ -240,12 +240,12 @@ static char
 	"Down","Left","Right",""
 					};
 
-char *IN_GetScanName(ScanCode scan)
+signed char *IN_GetScanName(ScanCode scan)
 {
-	char **p;
+	signed char **p;
 	ScanCode *s;
 
-	for (s = (ScanCode *)ExtScanCodes, p = (char **)ExtScanNames; *s; p++, s++)
+	for (s = (ScanCode *)ExtScanCodes, p = (signed char **)ExtScanNames; *s; p++, s++)
 		if (*s == scan)
 			return *p;
 
@@ -576,7 +576,7 @@ int CP_CheckQuick(unsigned scancode)
 		case sc_F9:
 			if (SaveGamesAvail[LSItems.curpos] && pickquick)
 			{
-				char string[100]=STR_LGC;
+				signed char string[100]=STR_LGC;
 
 				CA_CacheGrChunk(STARTFONT+1);
 				fontnumber = 1;
@@ -1119,7 +1119,7 @@ void DrawLSAction(int which)
 int CP_LoadGame(int quick)
 {
 	int which, exit=0;
-	char name[13];
+	signed char name[13];
 
 	strcpy(name, SaveName);
 
@@ -1268,7 +1268,7 @@ void PrintLSEntry(int w,int color)
 int CP_SaveGame(int quick)
 {
 	int which, exit=0;
-	char name[13], input[32];
+	signed char name[13], input[32];
 
 	strcpy(name,SaveName);
 
@@ -1708,7 +1708,7 @@ void DrawCtlScreen()
 //
 ////////////////////////////////////////////////////////////////////
 enum {FIRE,STRAFE,RUN,OPEN};
-char mbarray[4][3]={"b0","b1","b2","b3"};
+signed char mbarray[4][3]={"b0","b1","b2","b3"};
 int order[4]={RUN,OPEN,FIRE,STRAFE};
 
 void CustomControls(void)
@@ -2458,7 +2458,7 @@ void SetupControlPanel()
 			which=f.ff_name[7]-'0';
 			if (which<10)
 			{
-				char temp[32];
+				signed char temp[32];
 
 				if (ReadSaveTag(f.ff_name, temp) != -1) {
 					SaveGamesAvail[which]=1;
@@ -2500,7 +2500,7 @@ void SetupControlPanel()
 			which=f.name[7]-'0';
 			if (which<10)
 			{
-				char temp[32];
+				signed char temp[32];
 
 				if (ReadSaveTag(f.name, temp) != -1) {
 					SaveGamesAvail[which]=1;
@@ -2537,7 +2537,7 @@ void SetupControlPanel()
 	for (x = 0; x < globbuf.gl_pathc; x++) {
 		which = globbuf.gl_pathv[x][7] - '0';
 		if (which < 10)	{
-			char temp[32];
+			signed char temp[32];
 
 			if (ReadSaveTag(globbuf.gl_pathv[x], temp) != -1) {
 				SaveGamesAvail[which]=1;
@@ -2574,7 +2574,7 @@ void CleanupControlPanel()
 ////////////////////////////////////////////////////////////////////
 int HandleMenu(CP_iteminfo *item_i,CP_itemtype *items,void (*routine)(int w))
 {
-	char key;
+	signed char key;
 	static int redrawitem=1,lastitem=-1;
 	int i,x,y,basey,exit,which,shape,timer;
 	ControlInfo ci;
@@ -2634,7 +2634,7 @@ int HandleMenu(CP_iteminfo *item_i,CP_itemtype *items,void (*routine)(int w))
 		CheckPause();
 
 		//
-		// SEE IF ANY KEYS ARE PRESSED FOR INITIAL CHAR FINDING
+		// SEE IF ANY KEYS ARE PRESSED FOR INITIAL signed char FINDING
 		//
 		key=LastASCII;
 		if (key)
@@ -2966,7 +2966,7 @@ void ReadAnyControl(ControlInfo *ci)
 // DRAW DIALOG AND CONFIRM YES OR NO TO QUESTION
 //
 ////////////////////////////////////////////////////////////////////
-int Confirm(char *string)
+int Confirm(signed char *string)
 {
 	int xit=0,x,y,tick=0,whichsnd[2]={ESCPRESSEDSND,SHOOTSND};
 
@@ -3022,7 +3022,7 @@ while(IN_KeyDown(sc_Control) || IN_KeyDown(sc_Space) || IN_KeyDown(sc_N) || IN_K
 // PRINT A MESSAGE IN A WINDOW
 //
 ////////////////////////////////////////////////////////////////////
-void Message(char *string)
+void Message(signed char *string)
 {
 	word h=0, mw=0;
 

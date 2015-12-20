@@ -2,7 +2,7 @@
 
 typedef struct
 {
-	/* 0-255 is a character, > is a pointer to a node */
+	/* 0-255 is a signed character, > is a pointer to a node */
 	int bit0, bit1;
 } huffnode;
 
@@ -22,7 +22,7 @@ maptype	*mapheaderseg[NUMMAPS];
 byte	*audiosegs[NUMSNDCHUNKS];
 byte	*grsegs[NUMCHUNKS];
 
-char extension[5];
+signed char extension[5];
 #define gheadname "vgahead."
 #define gfilename "vgagraph."
 #define gdictname "vgadict."
@@ -49,9 +49,9 @@ static int audiohandle = -1;	/* handle to AUDIOT */
 =============================================================================
 */
 
-static void CA_CannotOpen(char *string)
+static void CA_CannotOpen(signed char *string)
 {
-	char str[30];
+	signed char str[30];
 
 	strcpy(str, "Can't open ");
 	strcat(str, string);
@@ -69,7 +69,7 @@ static void CA_CannotOpen(char *string)
 ==========================
 */
 
-boolean CA_WriteFile(char *filename, void *ptr, long length)
+boolean CA_WriteFile(signed char *filename, void *ptr, long length)
 {
 	ssize_t l;
 	int handle;
@@ -106,7 +106,7 @@ boolean CA_WriteFile(char *filename, void *ptr, long length)
 ==========================
 */
 
-boolean CA_LoadFile(char *filename, memptr *ptr)
+boolean CA_LoadFile(signed char *filename, memptr *ptr)
 {
 	int handle;
 	ssize_t l;
@@ -303,7 +303,7 @@ void CA_RLEWexpand(word *source, word *dest, long length, word rlewtag)
 
 static void CAL_SetupGrFile()
 {
-	char fname[13];
+	signed char fname[13];
 	int handle;
 	byte *grtemp;
 	int i;
@@ -378,7 +378,7 @@ static void CAL_SetupMapFile()
 	int i;
 	int handle;
 	long pos;
-	char fname[13];
+	signed char fname[13];
 
 	strcpy(fname, mheadname);
 	strcat(fname, extension);
@@ -447,7 +447,7 @@ static void CAL_SetupAudioFile()
 {
 	int handle;
 	long length;
-	char fname[13];
+	signed char fname[13];
 	int i;
 
 	strcpy(fname, aheadname);
@@ -776,7 +776,7 @@ static void PML_OpenPageFile()
 {
 	int i;
 	PageListStruct *page;
-	char fname[13];
+	signed char fname[13];
 
 	strcpy(fname, pfilename);
 	strcat(fname, extension);
