@@ -82,7 +82,8 @@ COMMON_OBJS = ff_ctr.o \
 			id_vh.o \
 			misc.o \
 			objs.o \
-			sd_null.o \
+			sd_comm.o \
+			sd_ctr.o \
 			vi_comm.o \
 			sys_ctr.o \
 			wl_act1.o \

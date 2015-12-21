@@ -1,14 +1,7 @@
 #include "include/wl_def.h"
 
-//#include <pthread.h>
-//#include <sys/ioctl.h>
-//#include <sys/soundcard.h>
 #include <sys/types.h>
-//#include <sys/stat.h>
-//#include <fcntl.h>
-//#include <unistd.h>
-
-#include "include/fmopl.h"
+#include <3ds.h>
 
 #define PACKED __attribute__((packed))
 
@@ -23,7 +16,7 @@ typedef	struct {
 } PACKED PCSound;
 
 typedef	struct {
-	byte msigned char, csigned char, mScale, cScale, mAttack, cAttack, mSus, cSus,
+	byte mChar, cChar, mScale, cScale, mAttack, cAttack, mSus, cSus,
 		mWave, cWave, nConn, voice, mode, unused[3];
 } PACKED Instrument;
 
@@ -66,7 +59,7 @@ static volatile fixed SoundGX[NUM_SFX];
 static volatile fixed SoundGY[NUM_SFX];
 static volatile int CurDigi[NUM_SFX];
 
-static FM_OPL *OPL;
+//static FM_OPL *OPL;
 static MusicGroup *Music;
 static volatile int NewMusic;
 static volatile int NewAdlib;
@@ -77,17 +70,9 @@ static boolean SPHack;
 
 #define NUM_SAMPS 512
 
-static short int sdlbuf[NUM_SAMPS * 2];
+u32* sdlbuf;
 static short int musbuf[NUM_SAMPS];
-static int bufpos;
-
-static int MusicLength;
-static int MusicCount;
-static word *MusicData;
-static byte AdlibBlock;
-static byte *AdlibData;
-static int AdlibLength;
-
+static int bufpos = 0;
 
 static void SetSoundLoc(fixed gx, fixed gy);
 static boolean SD_PlayDirSound(soundnames sound, fixed gx, fixed gy);
@@ -103,17 +88,7 @@ int SD_GetVolume()
 	return Volume;
 }
 
-void InitSoundBuff(void)
-{
-	MusicLength = 0;
-	MusicCount = 0;
-	MusicData = NULL;
-	AdlibBlock = 0;
-	AdlibData = NULL;
-	AdlibLength = -1;
-
-	OPLWrite(OPL, 0x01, 0x20); /* Set WSE=1 */
-	OPLWrite(OPL, 0x08, 0x00); /* Set CSM=0 & SEL=0 */
+void InitSoundBuff(void){
 }
 
 void FillSoundBuff(void)
@@ -124,104 +99,6 @@ void FillSoundBuff(void)
 
 	AdLibSound *AdlibSnd;
 	Instrument *inst;
-
-	// start by computing next buffer worth of music
-	if ((MusicMode!=smm_Off) || (SoundMode!=sdm_Off)) {
-		if (NewAdlib != -1) {
-			AdlibPlaying = NewAdlib;
-			AdlibSnd = (AdLibSound *)audiosegs[STARTADLIBSOUNDS+AdlibPlaying];
-			inst = (Instrument *)&AdlibSnd->inst;
-#define alsigned char		0x20
-#define alScale		0x40
-#define alAttack	0x60
-#define alSus		0x80
-#define alFeedCon	0xC0
-#define alWave		0xE0
-
-			OPLWrite(OPL, 0 + alsigned char, 0);
-			OPLWrite(OPL, 0 + alScale, 0);
-			OPLWrite(OPL, 0 + alAttack, 0);
-			OPLWrite(OPL, 0 + alSus, 0);
-			OPLWrite(OPL, 0 + alWave, 0);
-			OPLWrite(OPL, 3 + alsigned char, 0);
-			OPLWrite(OPL, 3 + alScale, 0);
-			OPLWrite(OPL, 3 + alAttack, 0);
-			OPLWrite(OPL, 3 + alSus, 0);
-			OPLWrite(OPL, 3 + alWave, 0);
-			OPLWrite(OPL, 0xA0, 0);
-			OPLWrite(OPL, 0xB0, 0);
-
-			OPLWrite(OPL, 0 + alsigned char, inst->msigned char);
-			OPLWrite(OPL, 0 + alScale, inst->mScale);
-			OPLWrite(OPL, 0 + alAttack, inst->mAttack);
-			OPLWrite(OPL, 0 + alSus, inst->mSus);
-			OPLWrite(OPL, 0 + alWave, inst->mWave);
-			OPLWrite(OPL, 3 + alsigned char, inst->csigned char);
-			OPLWrite(OPL, 3 + alScale, inst->cScale);
-			OPLWrite(OPL, 3 + alAttack, inst->cAttack);
-			OPLWrite(OPL, 3 + alSus, inst->cSus);
-			OPLWrite(OPL, 3 + alWave, inst->cWave);
-
-			//OPLWrite(OPL, alFeedCon, inst->nConn);
-			OPLWrite(OPL, alFeedCon, 0);
-
-			AdlibBlock = ((AdlibSnd->block & 7) << 2) | 0x20;
-			AdlibData = (byte *)&AdlibSnd->data;
-			AdlibLength = AdlibSnd->common.length*5;
-			//OPLWrite(OPL, 0xB0, AdlibBlock);
-			NewAdlib = -1;
-		}
-
-		if (NewMusic != -1) {
-			NewMusic = -1;
-			MusicLength = Music->length;
-			MusicData = Music->values;
-			MusicCount = 0;
-		}
-		for (i = 0; i < 4; i++) {
-			if (sqActive) {
-				while (MusicCount <= 0) {
-					dat = *MusicData++;
-					MusicCount = *MusicData++;
-					MusicLength -= 4;
-					OPLWrite(OPL, dat & 0xFF, dat >> 8);
-				}
-				if (MusicLength <= 0) {
-					NewMusic = 1;
-				}
-				MusicCount-=2;
-			}
-
-			if (AdlibPlaying != -1) {
-				if (AdlibLength == 0) {
-					//OPLWrite(OPL, 0xB0, AdlibBlock);
-				} else if (AdlibLength == -1) {
-					OPLWrite(OPL, 0xA0, 00);
-					OPLWrite(OPL, 0xB0, AdlibBlock);
-					AdlibPlaying = -1;
-				} else if ((AdlibLength % 5) == 0) {
-					OPLWrite(OPL, 0xA0, *AdlibData);
-					OPLWrite(OPL, 0xB0, AdlibBlock & ~2);
-					AdlibData++;
-				}
-				AdlibLength--;
-				if (AdlibLength == 0) {
-					//OPLWrite(OPL, 0xB0, AdlibBlock);
-				} else if (AdlibLength == -1) {
-					OPLWrite(OPL, 0xA0, 00);
-					OPLWrite(OPL, 0xB0, AdlibBlock);
-					AdlibPlaying = -1;
-				} else if ((AdlibLength % 5) == 0) {
-					OPLWrite(OPL, 0xA0, *AdlibData);
-					OPLWrite(OPL, 0xB0, AdlibBlock & ~2);
-					AdlibData++;
-				}
-				AdlibLength--;
-			}
-
-			YM3812UpdateOne(OPL, &musbuf[i*NUM_SAMPS/4], NUM_SAMPS/4);
-		}
-	}
 
 	//prefill audio buffer with music
 	for (i = 0; i < NUM_SAMPS*2; i++)
@@ -271,7 +148,7 @@ void FillSoundBuff(void)
 }
 
 
-void SoundCallBack(void *unused, Uint8 *stream, int len)
+/*void SoundCallBack(void *unused, Uint8 *stream, int len)
 {
 	Uint8 *waveptr;
 	int waveleft;
@@ -286,7 +163,7 @@ void SoundCallBack(void *unused, Uint8 *stream, int len)
 
     if (bufpos==0)
       FillSoundBuff();
-}
+}*/
 
 void Blah()
 {
@@ -313,6 +190,16 @@ void Blah()
     MM_FreePtr(&list);
 }
 
+ndspWaveBuf* waveBuf;
+// createDspBlock: Create a new block for DSP service
+void createDspBlock(ndspWaveBuf* waveBuf, u16 bps, u32 size, u8 loop, u32* data){
+	waveBuf->data_vaddr = (void*)data;
+	waveBuf->nsamples = size / bps;
+	waveBuf->looping = loop;
+	waveBuf->offset = 0;	
+	DSP_FlushDataCache(data, size);
+}
+
 void SD_Startup()
 {
 	int i;
@@ -322,7 +209,6 @@ void SD_Startup()
 
 	Blah();
 	InitDigiMap();
-	OPL = OPLCreate(OPL_TYPE_YM3812, 3579545, 44100);
 
 	for (i=0; i<NUM_SFX; i++) {
 		SoundPlaying[i] = -1;
@@ -335,24 +221,23 @@ void SD_Startup()
 	AdlibPlaying = -1;
 	sqActive = false;
 
-	if (!csndInit()) {
-		printf("failed to init audio\n");
+	if (ndspInit() != 0) {
+		printf("ERROR: failed to init audio\n");
 		return;
-    }
+    }else ndspSetOutputMode(NDSP_OUTPUT_STEREO);
+	sdlbuf = linearAlloc(NUM_SAMPS * 2);
+	ndspChnReset(0x08);
+	ndspChnWaveBufClear(0x08);
+	ndspChnSetInterp(0x08, NDSP_INTERP_POLYPHASE);
+	ndspChnSetRate(0x08, (float)44100);
+	ndspChnSetFormat(0x08, NDSP_FORMAT_STEREO_PCM16);
+	ndspSetCallback((ndspCallback)&FillSoundBuff, NULL);
+	waveBuf = (ndspWaveBuf*)calloc(1, sizeof(ndspWaveBuf));
+	createDspBlock(waveBuf, 2, NUM_SAMPS * 2, 1, sdlbuf);
+	ndspChnWaveBufAdd(0x08, waveBuf);
 
-	/*aspec.freq = 44100;
-	aspec.format = AUDIO_S16SYS;
-	aspec.channels = 2;
-	aspec.samples = NUM_SAMPS;
-	aspec.callback = SoundCallBack;
-	//if ( SDL_OpenAudio(&aspec, NULL) < 0 ) {
-	//	printf("couldn't open audio with desired format\n");
-	//	return;
-	//}*/
-
-	//printf("Configured audio device with %d samples/slice\n", aspec.samples);
+	printf("Configured audio device with %d samples\n", NUM_SAMPS);
 	InitSoundBuff();
-	//SDL_PauseAudio(0);
 
 	SD_Started = true;
 }
@@ -366,7 +251,10 @@ void SD_Shutdown()
 	SD_StopSound();
 
 	SD_Started = false;
-	OPLDestroy(OPL);
+	ndspChnWaveBufClear(0x08);
+	linearFree(sdlbuf);
+	free(waveBuf);
+	ndspExit();
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -472,9 +360,7 @@ void SD_StopSound()
 ///////////////////////////////////////////////////////////////////////////
 void SD_WaitSoundDone()
 {
-	while (SD_SoundPlaying())
-		svcSleepThread(1000);
-
+	while (SD_SoundPlaying()) ;
 }
 
 /*
@@ -593,6 +479,7 @@ void UpdateSoundLoc(fixed x, fixed y, int angle)
 void SD_MusicOn()
 {
 	sqActive = true;
+	ndspSetMasterVol(1.0);	
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -605,7 +492,7 @@ void SD_MusicOff()
 	int j;
 
 	sqActive = false;
-	OPLResetChip(OPL);
+	ndspSetMasterVol(0.0);
 
 	for (j=0; j<NUM_SAMPS; j++)
 		musbuf[j] = 0;
