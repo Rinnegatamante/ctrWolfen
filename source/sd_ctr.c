@@ -70,7 +70,7 @@ static boolean SPHack;
 
 #define NUM_SAMPS 512
 
-u32* sdlbuf;
+s16* sdlbuf;
 static short int musbuf[NUM_SAMPS];
 static int bufpos = 0;
 
@@ -96,9 +96,6 @@ void FillSoundBuff(void)
 	int i, j, snd;
 	short int samp;
 	word dat;
-
-	AdLibSound *AdlibSnd;
-	Instrument *inst;
 
 	//prefill audio buffer with music
 	for (i = 0; i < NUM_SAMPS*2; i++)
@@ -145,6 +142,7 @@ void FillSoundBuff(void)
 			}
 		}
 	}
+	DSP_FlushDataCache(sdlbuf, NUM_SAMPS*2);
 }
 
 
