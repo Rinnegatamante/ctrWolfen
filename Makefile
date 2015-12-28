@@ -26,12 +26,11 @@ CSTM_CTRULIB ?= $(CURDIR)/libctru
 #     - icon.png
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
-TARGET		:=	ctrWolfen
+
+NO_SMDH		:=
+TARGET		:=	boot
 BUILD		:=	build
 SOURCES		:=	source
-APP_AUTHOR 	:= 	Rinnegatamante
-APP_TITLE 	:= 	ctrWolfen
-APP_DESCRIPTION 	:= Wolfenstein 3D port for 3DS
 
 DATA		:=	data
 INCLUDES	:=	include

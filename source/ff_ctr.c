@@ -9,6 +9,7 @@
 #include<dmalloc.h>
 #endif
 
+extern char path[256];
 static signed char **dirfname;
 static int dirpos;
 static int dirsize;
@@ -66,7 +67,7 @@ int findfirst(const signed char *pathname, struct ffblk *ffblk, int attrib) {
 	printf("Looking for '%s' (%s)\n",match,pathname);
 	Handle dirHandle;
 	FS_dirent entry;
-	FS_Path dirPath=fsMakePath(PATH_ASCII, "/3ds/ctrWolfen");
+	FS_Path dirPath=fsMakePath(PATH_ASCII, path);
 	FS_Archive sdmcArchive = (FS_Archive){0x9, (FS_Path){PATH_EMPTY, 1, (u8*)""}};
 	FSUSER_OpenArchive( &sdmcArchive);
 	FSUSER_OpenDirectory(&dirHandle, sdmcArchive, dirPath);

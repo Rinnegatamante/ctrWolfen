@@ -12,9 +12,22 @@ u16 d_8to16table[256];
 vwidth = 400;
 vheight = 240;
 vstride = 400;
+char path[256];
 
 int main (int argc, signed char *argv[])
 {
+	// Set main directory and check for files
+	if (argc > 0){
+		int latest_slash = 0;
+		int i=5;
+		while (argv[0][i]  != '\0'){
+			if (argv[0][i] == '/') latest_slash = i;
+			i++;
+		}
+		strcpy(path,(const char*)&argv[0][5]);
+		path[latest_slash-5] = 0;
+	}
+	
 	aptInit();
 	aptOpenSession();
 	Result ret=APT_SetAppCpuTimeLimit(30);
@@ -25,7 +38,9 @@ int main (int argc, signed char *argv[])
 	gfxSetDoubleBuffering(GFX_TOP, false);
 	gfxSetDoubleBuffering(GFX_BOTTOM, false);
 	gfxSet3D(false);
-	consoleInit(GFX_BOTTOM, NULL);
+	consoleInit(GFX_BOTTOM, NULL);	
+	printf(path);
+	printf("\n");
 	return WolfMain(argc, argv);
 }
 
@@ -171,7 +186,6 @@ static int my = 0;
 static int weapon;
 void INL_SetKeys(u32 keys, u32 state){
 	if( keys & KEY_SELECT){ // Swap Weapons / Confirm Savegames
-		keyboard_handler(sc_Enter, state);
 		if (state == 1){
 			weapon = gamestate.weapon;
 			if (gamestate.weapon == 0){
@@ -202,6 +216,7 @@ void INL_SetKeys(u32 keys, u32 state){
 			keyboard_handler(sc_3, 0); 
 			keyboard_handler(sc_4, 0);
 		}
+		keyboard_handler(sc_Enter, state);
 	}
 	if( keys & KEY_A){ // Yes button/Fire
 		keyboard_handler(sc_Y, state); 
