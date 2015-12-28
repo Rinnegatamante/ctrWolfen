@@ -246,9 +246,11 @@ void INL_SetKeys(u32 keys, u32 state){
 		keyboard_handler(sc_RightArrow, state);
 	}
 	if( keys & KEY_L){ // Move left
+		keyboard_handler(sc_Alt, state);
 		keyboard_handler(sc_LeftArrow, state);
 	}
 	if( keys & KEY_R){ // Move right
+		keyboard_handler(sc_Alt, state);
 		keyboard_handler(sc_RightArrow, state);
 	}
 	if( keys & KEY_ZL){ // Move left
@@ -256,6 +258,25 @@ void INL_SetKeys(u32 keys, u32 state){
 	}
 	if( keys & KEY_ZR){ // Move right
 		keyboard_handler(sc_RightArrow, state);
+	}
+	if (keys & KEY_TOUCH){ // Touchscreen support
+		if (state == 1) INL_ReadTouch();
+		else{
+			keyboard_handler(sc_LeftArrow, 0);
+			keyboard_handler(sc_RightArrow, 0);
+		}
+	}
+}
+
+void INL_ReadTouch(){
+	touchPosition cpos;
+	hidTouchRead(&cpos);
+	if (cpos.px < 160){
+		keyboard_handler(sc_LeftArrow, 1);
+		keyboard_handler(sc_RightArrow, 0);
+	}else{
+		keyboard_handler(sc_RightArrow, 1);
+		keyboard_handler(sc_LeftArrow, 0);
 	}
 }
 
@@ -270,10 +291,10 @@ void INL_Update()
 	hidScanInput();
 	u32 kDown = hidKeysDown();
 	u32 kUp = hidKeysUp();
-	if(kDown)
-		INL_SetKeys(kDown, 1);
 	if(kUp)
 		INL_SetKeys(kUp, 0);
+	if(kDown)
+		INL_SetKeys(kDown, 1);
 		
 	mx = 0;
 	my = 0;
