@@ -16,7 +16,7 @@ char path[256];
 
 int main (int argc, signed char *argv[])
 {
-	// Set main directory and check for files
+	// Set main directory
 	if (argc > 0){
 		int latest_slash = 0;
 		int i=5;
@@ -39,8 +39,6 @@ int main (int argc, signed char *argv[])
 	gfxSetDoubleBuffering(GFX_BOTTOM, false);
 	gfxSet3D(false);
 	consoleInit(GFX_BOTTOM, NULL);	
-	printf(path);
-	printf("\n");
 	return WolfMain(argc, argv);
 }
 
