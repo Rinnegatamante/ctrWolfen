@@ -295,9 +295,14 @@ void INL_Update()
 		INL_SetKeys(kUp, 0);
 	if(kDown)
 		INL_SetKeys(kDown, 1);
-		
-	mx = 0;
-	my = 0;
+	
+	// Circle Stick Support
+	circlePosition cpos;
+	hidCircleRead(&cpos);
+	if (abs(cpos.dx) > 32) mx = (cpos.dx) >> 1;
+	else mx = 0;
+	if (abs(cpos.dy) > 32) my = (0-(cpos.dy)) >> 2;
+	else my = 0;
 	
 }
 
