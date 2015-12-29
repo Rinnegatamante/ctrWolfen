@@ -650,7 +650,7 @@ static void ClearScreen()
 */
 
 #ifndef DRAWCEIL
- /* #define DRAWCEIL */
+ #define DRAWCEIL
 #endif
 
 void ThreeDRefresh()
