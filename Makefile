@@ -75,7 +75,8 @@ export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
-COMMON_OBJS = ff_ctr.o \
+COMMON_OBJS = fmopl.o \
+			ff_ctr.o \
 			id_ca.o \
 			id_us.o \
 			id_vh.o \
