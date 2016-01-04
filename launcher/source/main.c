@@ -49,11 +49,12 @@ void drawMenu(int i){
 	consoleClear();
 	int z;
 	int j = 0;
-	printf("  ___ _     __      __   _  __    v.0.6\n");
+	printf("  ___ _     __      __   _  __    v.0.8\n");
 	printf(" / __| |_ _ \\ \\    / /__| |/ _|___ _ _ \n");
 	printf("| (__|  _| '_\\ \\/\\/ / _ \\ |  _/ -_) ' \\\n");
 	printf(" \\___|\\__|_|  \\_/\\_/\\___/_|_| \\___|_||_|\n");
-	printf("\n\nSelect version to load:\n\n");
+	printf("                       by Rinnegatamante\n\n");
+	printf("Select version to load:\n\n");
 	for (z = 0; z < num_modes; z++){
 		while (modes[j] == false){
 			j++;

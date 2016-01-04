@@ -31,7 +31,7 @@ typedef	struct {
 	word length, values[1];
 } PACKED MusicGroup;
 
-boolean AdLibPresent=true, SoundBlasterPresent=true;
+boolean AdLibPresent=true, SoundBlasterPresent=true, term=false;
 
 SDMode SoundMode;
 SMMode MusicMode;
@@ -71,7 +71,7 @@ static boolean SPHack;
 
 #define NUM_SAMPS 512
 
-s16* sdlbuf;
+u16* sdlbuf;
 static short int musbuf[NUM_SAMPS];
 static int bufpos = 0;
 
@@ -115,7 +115,12 @@ void InitSoundBuff(void){
 void FillSoundBuff2(void)
 {
 	while (1){
-	u32 i, j, snd;
+	
+	if(term){
+		term = false;
+		svcExitThread();
+	}
+	int i, j, snd;
 	short int samp;
 	word dat;
 
@@ -221,8 +226,10 @@ void FillSoundBuff2(void)
 	}
 	
 	//prefill audio buffer with music
-	memcpy(sdlbuf,musbuf,NUM_SAMPS);
-	memcpy(&sdlbuf[NUM_SAMPS],musbuf,NUM_SAMPS);
+	for (j=0; j<NUM_SAMPS/2; j++){
+		sdlbuf[j] = musbuf[j];
+		sdlbuf[NUM_SAMPS+j] = musbuf[j];
+	}
 	
 	// now add in sound effects
 	for (j=0; j<NUM_SFX; j++) {
@@ -243,11 +250,11 @@ void FillSoundBuff2(void)
 				snd = samp*(16-L)>>5;
 				sdlbuf[i+0] += snd;
 				snd = samp*(16-R)>>5;
-				sdlbuf[NUM_SAMPS+i+0] += snd;
+				sdlbuf[NUM_SAMPS+i] += snd;
 			} else {
 				snd = samp>>2;
 				sdlbuf[i+0] += snd;
-				sdlbuf[NUM_SAMPS+i+0] += snd;
+				sdlbuf[NUM_SAMPS+i] += snd;
 			}
 			SoundPlayPos[j] += 10402; // 7000 / 44100 * 65536
 			if ((SoundPlayPos[j] >> 16) >= SoundPlayLen[j]) {
@@ -265,6 +272,7 @@ void FillSoundBuff2(void)
 			}
 		}
 	}
+	
 	//CSND_FlushDataCache(sdlbuf, NUM_SAMPS);
 	}
 }
@@ -500,14 +508,36 @@ void SD_Startup()
 	AdlibPlaying = -1;
 	sqActive = false;
 	sdlbuf = linearAlloc(NUM_SAMPS*2);
-	/*if (csndInit() == 0){
-		audioservice = 0;
-		csndPlaySound(0x08, SOUND_FORMAT_16BIT | SOUND_REPEAT, 44100, 1.0, -1.0, sdlbuf, sdlbuf, NUM_SAMPS);
-		csndPlaySound(0x09, SOUND_FORMAT_16BIT | SOUND_REPEAT, 44100, 1.0, 1.0, &sdlbuf[NUM_SAMPS], &sdlbuf[NUM_SAMPS], NUM_SAMPS);
-		threadStack = (u32*)memalign(32, 8192);
-		Result ret = svcCreateThread(&streamThread, FillSoundBuff2, NULL, &threadStack[2048], 0x18, 1);
-		printf("Audio-service: csnd:SND\n");
-	}else*/ if (ndspInit() != 0) {
+	memset(sdlbuf, 0, NUM_SAMPS*2);
+	memset(musbuf, 0, NUM_SAMPS);
+	hidScanInput();
+	if (hidKeysHeld() && KEY_L){
+		if (csndInit() == 0){
+			audioservice = 0;
+			csndPlaySound(0x08, SOUND_FORMAT_16BIT | SOUND_REPEAT, 44100, 1.0, -1.0, sdlbuf, sdlbuf, NUM_SAMPS);
+			csndPlaySound(0x09, SOUND_FORMAT_16BIT | SOUND_REPEAT, 44100, 1.0, 1.0, &sdlbuf[NUM_SAMPS], &sdlbuf[NUM_SAMPS], NUM_SAMPS);
+			svcSleepThread(100000000);
+			threadStack = (u32*)memalign(32, 8192);
+			Result ret = svcCreateThread(&streamThread, FillSoundBuff2, NULL, &threadStack[2048], 0x18, 1);
+			printf("Audio-service: csnd:SND\n");
+		}else if (ndspInit() != 0) {
+			printf("ERROR: failed to init audio\n");
+			return;
+		}else{ 
+			printf("Audio-service: dsp::DSP\n");
+			audioservice = 1;
+			ndspSetOutputMode(NDSP_OUTPUT_STEREO);
+			ndspChnReset(0x08);
+			ndspChnWaveBufClear(0x08);
+			ndspChnSetInterp(0x08, NDSP_INTERP_LINEAR);
+			ndspChnSetRate(0x08, (float)44100);
+			ndspChnSetFormat(0x08, NDSP_FORMAT_STEREO_PCM16);
+			ndspSetCallback((ndspCallback)&FillSoundBuff, NULL);
+			waveBuf = (ndspWaveBuf*)calloc(1, sizeof(ndspWaveBuf));
+			createDspBlock(waveBuf, 2, NUM_SAMPS * 2, 1, sdlbuf);
+			ndspChnWaveBufAdd(0x08, waveBuf);
+		}
+	}else if (ndspInit() != 0) {
 		printf("ERROR: failed to init audio\n");
 		return;
     }else{ 
@@ -544,6 +574,10 @@ void SD_Shutdown()
 		ndspChnWaveBufClear(0x08);
 		ndspExit();
 	}else if (audioservice == 0){
+		term = true;
+		svcSleepThread(1000000000);
+		svcCloseHandle(streamThread);
+		free(threadStack);
 		csndExit();
 	}
 	linearFree(sdlbuf);
